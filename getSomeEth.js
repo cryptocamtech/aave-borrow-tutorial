@@ -21,9 +21,10 @@ const Web3 = require('web3');
 const dotenv = require('dotenv').config();
 
 // read the private key and put it into the wallet
-const web3 = new Web3(process.env.URL);
 console.log("URL: " + process.env.URL);
+const web3 = new Web3(process.env.URL);
 
+// "borrow" from this account
 const otherAccount = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
 
 (async () => {
@@ -38,6 +39,7 @@ const otherAccount = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
             value: web3.utils.toWei('100', 'ether')
         })
         .catch(e => { throw Error('Error sending transaction: ' + e.message); });
+
     console.log('txHash: ' + txHash.transactionHash);
     const balance = await web3.eth.getBalance(myAccount);
     console.log("balance: " + balance);

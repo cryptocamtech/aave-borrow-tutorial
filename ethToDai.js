@@ -14,43 +14,36 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
     note: Copy env to .env and update the private key to your account.
-          Also works on the Rinkeby network if you are using that.
  
     ethToDai.js
 */
-const Tx = require('ethereumjs-tx').Transaction;
 const Web3 = require('web3');
-const HDWalletProvider = require('@truffle/hdwallet-provider');
+const Tx = require('ethereumjs-tx').Transaction;
 const dotenv = require('dotenv').config();
 const fs = require('fs');
 
 // read the private key and put it into the wallet
-console.log("URL: " + process.env.URL);
-const provider = new HDWalletProvider(process.env.PRIVATE_KEY, process.env.URL);
-const web3 = new Web3(provider); 
+const web3 = new Web3('http://localhost:7545');
 
 // ABI imports
-const uniswapV1ExchangeAddress = process.env.UNISWAP_EXCHANGE_ADDRESS; 
+const uniswapV1ExchangeAddress = '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'; 
 const uniswapV1ExchangeABI = JSON.parse(fs.readFileSync('./ABIs/uniswapv1.json'));
-const daiAddress = process.env.DAI_ADDRESS;
+const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const daiABI = JSON.parse(fs.readFileSync('./ABIs/DAI.json'));
 
 // create the contracts
 const uniswapExchangeContract = new web3.eth.Contract(uniswapV1ExchangeABI, uniswapV1ExchangeAddress);
 const daiContract = new web3.eth.Contract(daiABI, daiAddress);
 
-const ETHER_TO_USE = 1;
-const MIN_DAI_TO_SWAP = 1; // note: exchange rate on Rinkeby isn't right, so fails if you put in "proper" values
-const ETH_SOLD = web3.utils.toHex(web3.utils.toWei(ETHER_TO_USE.toString(), 'ether')); 
 
 // declare const variables to pass to the ethToTokenSwapInput function of the dai exchange contract
-const MIN_TOKENS = web3.utils.toHex(MIN_DAI_TO_SWAP * 10 ** 18);
-const DEADLINE = Math.floor(new Date() / 1000) + 3600; // now plus 1 hour
+const ETH_SOLD = web3.utils.toHex(web3.utils.toWei('1', 'ether')); 
+const MIN_TOKENS = web3.utils.toHex(200 * 10 ** 18);
+const DEADLINE = Math.floor(new Date() / 1000) + 10;
 
 (async () => {
     // get our account
-    const accounts = await web3.eth.getAccounts();
-    const myAccount = accounts[0];
+    const myAccount = process.env.ACCOUNT;
     console.log("myAccount: " + myAccount);
 
     // create the encoded abi of the ethToTokenSwapInput function

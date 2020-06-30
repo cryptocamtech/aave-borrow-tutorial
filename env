@@ -1,13 +1,4 @@
+# note: don't commit!
 PRIVATE_KEY = '****************************************************************'
 ACCOUNT = '0x****************************************'
-
-# mainnet
-URL = 'http://localhost:7545'
-UNISWAP_EXCHANGE_ADDRESS = '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'
-DAI_ADDRESS = '0x6b175474e89094c44da98b954eedeac495271d0f'
-
-# rinkeby
-#URL = 'http://localhost:8545'
-#DAI_EXCHANGE_ADDRESS = '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891'
-#DAI_ADDRESS = '0x2448ee2641d78cc42d7ad76498917359d961a783'
 

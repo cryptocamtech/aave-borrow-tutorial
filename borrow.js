@@ -23,9 +23,7 @@ const dotenv = require('dotenv').config();
 const fs = require('fs');
 
 // read the private key and put it into the wallet
-console.log("URL: " + process.env.URL);
-const provider = new HDWalletProvider(process.env.PRIVATE_KEY, process.env.URL);
-const web3 = new Web3(provider); 
+const web3 = new Web3('http://localhost:7545');
 
 // ABI imports
 const ERC20ABI = JSON.parse(fs.readFileSync('./ABIs/ERC20.json'));
@@ -33,10 +31,10 @@ const LendingPoolAddressProviderABI = JSON.parse(fs.readFileSync('./ABIs/Address
 const LendingPoolABI = JSON.parse(fs.readFileSync('./ABIs/LendingPool.json'));
 
 const daiAmountinWei = web3.utils.toWei("5", "ether").toString(); // amount in DAI
-const daiAddress = process.env.DAI_ADDRESS;
+const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const lpAddressProviderAddress = "0x24a42fD28C976A61Df5D00D0599C34c4f90748c8";
 const lpAddressProviderContract = new web3.eth.Contract(LendingPoolAddressProviderABI, lpAddressProviderAddress);
-const interestRateMode = 2 // variable rate
+const interestRateMode = 2; // variable rate
 const referralCode = "0";
 
 (async () => {
@@ -62,7 +60,6 @@ const referralCode = "0";
         return lpCoreAddress
     }
 
-    web3.eth.accounts.wallet.create();
     const account = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
     web3.eth.accounts.wallet.add(account);
     console.log("account: " + account.address);
