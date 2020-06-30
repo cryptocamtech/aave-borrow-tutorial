@@ -9,10 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@truffle/hdwallet-provider": "^1.0.35",
-    "chai": "^4.2.0",
     "dotenv": "^8.2.0",
-    "openzeppelin-test-helpers": "^0.5.1",
+    "ethereumjs-tx": "^2.1.2",
+    "fs": "0.0.1-security",
     "web3": "^1.2.9"
   }
 }
