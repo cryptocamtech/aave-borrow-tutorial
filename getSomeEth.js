@@ -20,9 +20,9 @@
 const Web3 = require('web3');
 const dotenv = require('dotenv').config();
 
-// read the private key and put it into the wallet
-console.log("URL: " + process.env.URL);
-const web3 = new Web3(process.env.URL);
+const url = process.env.URL;
+console.log("url=" + url);
+const web3 = new Web3(url);
 
 // "borrow" from this account
 const otherAccount = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";

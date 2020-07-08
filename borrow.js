@@ -18,17 +18,17 @@
     borrow.js
 */
 const Web3 = require('web3');
-const HDWalletProvider = require('@truffle/hdwallet-provider');
 const dotenv = require('dotenv').config();
-const fs = require('fs');
 
-// read the private key and put it into the wallet
-const web3 = new Web3('http://localhost:7545');
+const url = process.env.URL;
+console.log("url=" + url);
+const web3 = new Web3(url);
+
 
 // ABI imports
-const ERC20ABI = JSON.parse(fs.readFileSync('./ABIs/ERC20.json'));
-const LendingPoolAddressProviderABI = JSON.parse(fs.readFileSync('./ABIs/AddressProvider.json'));
-const LendingPoolABI = JSON.parse(fs.readFileSync('./ABIs/LendingPool.json'));
+const ERC20ABI = require('./ABIs/ERC20.json');
+const LendingPoolAddressProviderABI = require('./ABIs/AddressProvider.json');
+const LendingPoolABI = require('./ABIs/LendingPool.json');
 
 const daiAmountinWei = web3.utils.toWei("5", "ether").toString(); // amount in DAI
 const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';

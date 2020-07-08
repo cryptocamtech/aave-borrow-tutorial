@@ -19,16 +19,18 @@
 */
 const Web3 = require('web3');
 const dotenv = require('dotenv').config();
-const fs = require('fs');
 
-const web3 = new Web3('http://localhost:7545');
+const url = process.env.URL;
+console.log("url=" + url);
+const web3 = new Web3(url);
 
 // ABI imports
-const ERC20ABI = JSON.parse(fs.readFileSync('./ABIs/ERC20.json'));
-const LendingPoolAddressProviderABI = JSON.parse(fs.readFileSync('./ABIs/AddressProvider.json'));
-const LendingPoolABI = JSON.parse(fs.readFileSync('./ABIs/LendingPool.json'));
+const ERC20ABI = require('./ABIs/ERC20.json');
+const LendingPoolAddressProviderABI = require('./ABIs/AddressProvider.json');
+const LendingPoolABI = require('./ABIs/LendingPool.json');
 
-const daiAmountinWei = web3.utils.toWei("10", "ether").toString(); // amount of DAI (not ETH)
+// amount of DAI (not ETH)
+const daiAmountinWei = web3.utils.toWei("10", "ether").toString(); 
 const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const lpAddressProviderAddress = "0x24a42fD28C976A61Df5D00D0599C34c4f90748c8";
 const lpAddressProviderContract = new web3.eth.Contract(LendingPoolAddressProviderABI, lpAddressProviderAddress);

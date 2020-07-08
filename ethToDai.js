@@ -20,21 +20,21 @@
 const Web3 = require('web3');
 const Tx = require('ethereumjs-tx').Transaction;
 const dotenv = require('dotenv').config();
-const fs = require('fs');
 
-// read the private key and put it into the wallet
-const web3 = new Web3('http://localhost:7545');
+const url = process.env.URL;
+console.log("url=" + url);
+const web3 = new Web3(url);
 
 // ABI imports
 const uniswapV1ExchangeAddress = '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'; 
-const uniswapV1ExchangeABI = JSON.parse(fs.readFileSync('./ABIs/uniswapv1.json'));
+const uniswapV1ExchangeABI = require('./ABIs/uniswapv1.json');
 const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
-const daiABI = JSON.parse(fs.readFileSync('./ABIs/DAI.json'));
+const daiABI = require('./ABIs/DAI.json');
 
 // create the contracts
+
 const uniswapExchangeContract = new web3.eth.Contract(uniswapV1ExchangeABI, uniswapV1ExchangeAddress);
 const daiContract = new web3.eth.Contract(daiABI, daiAddress);
-
 
 // declare const variables to pass to the ethToTokenSwapInput function of the dai exchange contract
 const ETH_SOLD = web3.utils.toHex(web3.utils.toWei('1', 'ether')); 
