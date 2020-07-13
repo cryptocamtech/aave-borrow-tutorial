@@ -16,25 +16,27 @@
     note: Copy env to .env and update the private key to your account.
 
     getSomeEth.js
+
+    Do a Robin Hood and take from the rich and give to the poor (us!)
 */
 const Web3 = require('web3');
 const dotenv = require('dotenv').config();
 
 const url = process.env.URL;
-console.log("url=" + url);
+console.log("url: " + url);
 const web3 = new Web3(url);
 
-// "borrow" from this account
-const otherAccount = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
+// "borrow" from this account - must be unlocked in ganache-cli
+const ethBorrowAccount = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
 
-(async () => {
+const init = async () => {
     // get our account
     const myAccount = process.env.ACCOUNT;
     console.log("myAccount: " + myAccount);
 
     // do the transfer
     const txHash = await web3.eth.sendTransaction({
-            from: otherAccount, 
+            from: ethBorrowAccount, 
             to: myAccount, 
             value: web3.utils.toWei('100', 'ether')
         })
@@ -42,9 +44,7 @@ const otherAccount = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
 
     console.log('txHash: ' + txHash.transactionHash);
     const balance = await web3.eth.getBalance(myAccount);
-    console.log("balance: " + balance);
-})()
-.then(() => process.exit())
-.catch(e => {
-    console.log(e.message)
-});
+    console.log("eth balance: " + web3.utils.fromWei(balance, 'ether'));
+}
+
+init();

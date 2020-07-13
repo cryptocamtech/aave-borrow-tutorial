@@ -16,13 +16,15 @@
     note: Copy env to .env and update the private key to your account.
  
     ethToDai.js
+
+    Exchange some eth for dai on Uniswap
 */
 const Web3 = require('web3');
 const Tx = require('ethereumjs-tx').Transaction;
 const dotenv = require('dotenv').config();
 
 const url = process.env.URL;
-console.log("url=" + url);
+console.log("url: " + url);
 const web3 = new Web3(url);
 
 // ABI imports
@@ -32,7 +34,6 @@ const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const daiABI = require('./ABIs/DAI.json');
 
 // create the contracts
-
 const uniswapExchangeContract = new web3.eth.Contract(uniswapV1ExchangeABI, uniswapV1ExchangeAddress);
 const daiContract = new web3.eth.Contract(daiABI, daiAddress);
 
@@ -41,7 +42,7 @@ const ETH_SOLD = web3.utils.toHex(web3.utils.toWei('1', 'ether'));
 const MIN_TOKENS = web3.utils.toHex(200 * 10 ** 18);
 const DEADLINE = Math.floor(new Date() / 1000) + 10;
 
-(async () => {
+const init = async () => {
     // get our account
     const myAccount = process.env.ACCOUNT;
     console.log("myAccount: " + myAccount);
@@ -53,7 +54,7 @@ const DEADLINE = Math.floor(new Date() / 1000) + 10;
 
     // work out our current balance
     let balance = await daiContract.methods.balanceOf(myAccount).call();
-    console.log("initial balance: " + balance);
+    console.log("initial balance: " + web3.utils.fromWei(balance, 'ether'));
 
     // construct a transaction object and invoke the sendSignedTx function
     const txCount = await web3.eth.getTransactionCount(myAccount);
@@ -78,10 +79,8 @@ const DEADLINE = Math.floor(new Date() / 1000) + 10;
     // display the final balance
     balance = await daiContract.methods.balanceOf(myAccount).call()
                 .catch(e => { throw Error('Error getting balance: ' + e.message); });
-    console.log("final balance: " + balance)
+    console.log("final balance: " + web3.utils.fromWei(balance, 'ether'))
     console.log("success!");
-})()
-.then(() => process.exit())
-.catch(e => {
-    console.log(e.message)
-});
+}
+
+init();

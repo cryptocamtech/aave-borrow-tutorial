@@ -16,14 +16,15 @@
     note: Copy env to .env and update the private key to your account.
    
     borrow.js
+
+    Borrow some dai from Aave
 */
 const Web3 = require('web3');
 const dotenv = require('dotenv').config();
 
 const url = process.env.URL;
-console.log("url=" + url);
+console.log("url: " + url);
 const web3 = new Web3(url);
-
 
 // ABI imports
 const ERC20ABI = require('./ABIs/ERC20.json');
@@ -37,7 +38,7 @@ const lpAddressProviderContract = new web3.eth.Contract(LendingPoolAddressProvid
 const interestRateMode = 2; // variable rate
 const referralCode = "0";
 
-(async () => {
+const init = async () => {
     async function getLendingPoolAddress() {
         const lpAddress = await lpAddressProviderContract.methods
               .getLendingPool()
@@ -62,17 +63,22 @@ const referralCode = "0";
 
     const account = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
     web3.eth.accounts.wallet.add(account);
-    console.log("account: " + account.address);
-    const myAddress = account.address;
+    const myAccount = account.address;
+    console.log("account: " + myAccount);
     const lpCoreAddress = await getLendingPoolCoreAddress();
+    const gasPrice = await web3.eth.getGasPrice();
+
+    // work out our current balance
+    const daiContract = new web3.eth.Contract(ERC20ABI, daiAddress);
+    let balance = await daiContract.methods.balanceOf(myAccount).call();
+    console.log("initial balance: " + web3.utils.fromWei(balance, 'ether'));
 
     // Approve the LendingPoolCore address with the DAI contract
-    const daiContract = new web3.eth.Contract(ERC20ABI, daiAddress);
-    await daiContract.methods
-        .approve(lpCoreAddress, daiAmountinWei)
-        .send({ from: myAddress,
+    let approve = daiContract.methods.approve(lpCoreAddress, daiAmountinWei);
+    await approve.send({ 
+            from: myAccount,
             gasLimit: web3.utils.toHex(60000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
+            gasPrice
         })
         .catch((e) => {
           throw Error(`Error approving DAI allowance: ${e.message}`)
@@ -81,18 +87,20 @@ const referralCode = "0";
     // The borrow transaction via LendingPool contract
     const lpAddress = await getLendingPoolAddress();
     const lpContract = new web3.eth.Contract(LendingPoolABI, lpAddress);
-    await lpContract.methods
-        .borrow(daiAddress, daiAmountinWei, interestRateMode, referralCode)
-        .send({ from: myAddress, 
+    const borrow = lpContract.methods.borrow(
+            daiAddress, daiAmountinWei, interestRateMode, referralCode);
+    await borrow.send({ 
+            from: myAccount, 
             gasLimit: web3.utils.toHex(600000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
+            gasPrice
         })
-        .catch((e) => {
-          throw Error(`Error borrowing from the LendingPool contract: ${e.message}`)
-        });
+        .catch((e) => { throw Error(`Error borrowing from the LendingPool contract: ${e.message}`); });
+
+    // display the final balance
+    balance = await daiContract.methods.balanceOf(myAccount).call()
+                .catch(e => { throw Error('Error getting balance: ' + e.message); });
+    console.log("final balance: " + web3.utils.fromWei(balance, 'ether'))
     console.log("success!");
-})()
-.then(() => process.exit())
-.catch(e => {
-    console.log(e.message)
-});
+}
+
+init();

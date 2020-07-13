@@ -16,12 +16,14 @@
     note: Copy env to .env and update the private key to your account.
 
     deposit.js
+
+    Deposit some dai into Aave
 */
 const Web3 = require('web3');
 const dotenv = require('dotenv').config();
 
 const url = process.env.URL;
-console.log("url=" + url);
+console.log("url: " + url);
 const web3 = new Web3(url);
 
 // ABI imports
@@ -36,7 +38,7 @@ const lpAddressProviderAddress = "0x24a42fD28C976A61Df5D00D0599C34c4f90748c8";
 const lpAddressProviderContract = new web3.eth.Contract(LendingPoolAddressProviderABI, lpAddressProviderAddress);
 const referralCode = "0";
 
-(async () => {
+const init = async () => {
     async function getLendingPoolAddress() {
         const lpAddress = await lpAddressProviderContract.methods
               .getLendingPool()
@@ -59,41 +61,38 @@ const referralCode = "0";
         return lpCoreAddress
     }
 
+    // import the account via the private key
     const account = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
     web3.eth.accounts.wallet.add(account);
-    console.log("account: " + account.address);
-    const myAddress = account.address;
+    const myAccount = account.address;
+    console.log("account: " + myAccount);
     const lpCoreAddress = await getLendingPoolCoreAddress();
 
     // Approve the LendingPoolCore address with the DAI contract
     const daiContract = new web3.eth.Contract(ERC20ABI, daiAddress);
-    await daiContract.methods
-        .approve(lpCoreAddress, daiAmountinWei)
-        .send({ 
-            from: myAddress,
+
+    let approve = daiContract.methods.approve(lpCoreAddress, daiAmountinWei);
+    const gasPrice = await web3.eth.getGasPrice();
+
+    await approve.send({ 
+            from: myAccount,
             gasLimit: web3.utils.toHex(60000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
+            gasPrice
         })
-        .catch((e) => {
-          throw Error(`Error approving DAI allowance: ${e.message}`)
-        });
+        .catch((e) => { throw Error(`Error approving DAI allowance: ${e.message}`) });
 
     // Make the deposit transaction via LendingPool contract
     const lpAddress = await getLendingPoolAddress();
     const lpContract = new web3.eth.Contract(LendingPoolABI, lpAddress);
-    await lpContract.methods
-        .deposit(daiAddress, daiAmountinWei, referralCode)
-        .send({ 
-            from: myAddress, 
+    const deposit = lpContract.methods.deposit(
+            daiAddress, daiAmountinWei, referralCode);
+    await deposit.send({ 
+            from: myAccount, 
             gasLimit: web3.utils.toHex(250000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
+            gasPrice
         })
-        .catch((e) => {
-          throw Error(`Error depositing to the LendingPool contract: ${e.message}`)
-        });
+        .catch((e) => { throw Error(`Error depositing to the LendingPool contract: ${e.message}`); });
     console.log("success!");
-})()
-.then(() => process.exit())
-.catch(e => {
-    console.log(e.message)
-});
+}
+
+init();

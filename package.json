@@ -1,12 +1,13 @@
 {
-  "name": "Aave Tutorial",
+  "name": "Aave Borrow Tutorial",
   "version": "1.0.0",
   "description": "",
-  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Crypto Cam Tech",
+  "repository": "https://github.com/cryptocamtech/aave-borrow-tutorial",
+  "homepage": "https://cryptocam.tech/",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
