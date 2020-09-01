@@ -10,14 +10,12 @@ Preparation:
 ```
     cp env .env  
     // update variables in .env as appropriate  
-    npm install web3  
-    npm install dotenv  
-    npm install ethereumjs-tx 
+    npm update
 ```
 
 And run
 ```
-    fork_main.sh 
+    ./fork_main.sh 
     node ethToDai.js
     node deposit.js
     node borrow.js

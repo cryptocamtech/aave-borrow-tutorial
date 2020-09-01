@@ -14,14 +14,14 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
     note: Copy env to .env and update the private key to your account.
- 
+
     ethToDai.js
 
     Exchange some eth for dai on Uniswap
 */
+require('dotenv').config();
 const Web3 = require('web3');
 const Tx = require('ethereumjs-tx').Transaction;
-const dotenv = require('dotenv').config();
 
 const url = process.env.URL;
 console.log("url: " + url);
