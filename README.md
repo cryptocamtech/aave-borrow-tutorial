@@ -15,6 +15,7 @@ Preparation:
 
 And run
 ```
+    chmod a+x fork_main.sh
     ./fork_main.sh 
     node ethToDai.js
     node deposit.js
