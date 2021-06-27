@@ -91,7 +91,7 @@ const init = async () => {
             daiAddress, daiAmountinWei, interestRateMode, referralCode);
     await borrow.send({ 
             from: myAccount, 
-            gasLimit: web3.utils.toHex(600000),
+            gasLimit: web3.utils.toHex(1600000),
             gasPrice
         })
         .catch((e) => { throw Error(`Error borrowing from the LendingPool contract: ${e.message}`); });

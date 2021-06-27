@@ -60,7 +60,7 @@ const init = async () => {
     const txCount = await web3.eth.getTransactionCount(myAccount);
     const txObject = {
         nonce: web3.utils.toHex(txCount),
-        gasLimit: web3.utils.toHex(60000),
+        gasLimit: web3.utils.toHex(160000),
         gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
         to: uniswapV1ExchangeAddress,
         from: myAccount,

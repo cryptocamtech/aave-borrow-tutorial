@@ -88,7 +88,7 @@ const init = async () => {
             daiAddress, daiAmountinWei, referralCode);
     await deposit.send({ 
             from: myAccount, 
-            gasLimit: web3.utils.toHex(250000),
+            gasLimit: web3.utils.toHex(1250000),
             gasPrice
         })
         .catch((e) => { throw Error(`Error depositing to the LendingPool contract: ${e.message}`); });
