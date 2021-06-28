@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2020, Cameron Hamilton-Rich
+    Copyright (c) 2021, Cameron Hamilton-Rich
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -60,7 +60,7 @@ const init = async () => {
     const txCount = await web3.eth.getTransactionCount(myAccount);
     const txObject = {
         nonce: web3.utils.toHex(txCount),
-        gasLimit: web3.utils.toHex(160000),
+        gasLimit: web3.utils.toHex(60000),
         gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
         to: uniswapV1ExchangeAddress,
         from: myAccount,

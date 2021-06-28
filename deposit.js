@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2020, Cameron Hamilton-Rich
+    Copyright (c) 2021, Cameron Hamilton-Rich
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -88,7 +88,7 @@ const init = async () => {
             daiAddress, daiAmountinWei, referralCode);
     await deposit.send({ 
             from: myAccount, 
-            gasLimit: web3.utils.toHex(1250000),
+            gasLimit: web3.utils.toHex(250000),
             gasPrice
         })
         .catch((e) => { throw Error(`Error depositing to the LendingPool contract: ${e.message}`); });
